@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog][keepachangelog], and this project adhe
 
 ## [Unreleased]
 
+### Changed
+
+- Make `TestClock` implement `Serializable`.
+
 ## [1.0.0] - 2026-04-15
 
 ### Added

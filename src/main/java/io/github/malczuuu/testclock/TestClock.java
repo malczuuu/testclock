@@ -16,6 +16,7 @@
 
 package io.github.malczuuu.testclock;
 
+import java.io.Serializable;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -48,7 +49,9 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @since 1.0.0
  */
-public class TestClock extends Clock {
+public class TestClock extends Clock implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   /**
    * Creates a {@code TestClock} initialized from the current UTC system time.

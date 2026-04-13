@@ -19,6 +19,10 @@ package io.github.malczuuu.testclock;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -384,5 +388,39 @@ class TestClockTests {
   void givenTickingClock_whenToString_thenIncludesTickSegment() {
     assertThat(TestClock.from(BASE).withTickDuration(Duration.ofSeconds(5)).toString())
         .isEqualTo("TestClock[2024-06-15T12:00:00Z,Z,tick=PT5S]");
+  }
+
+  @Test
+  void givenClock_whenSerializedAndDeserialized_thenStateIsPreserved() throws Exception {
+    TestClock original = TestClock.from(BASE, ZoneId.of("Europe/Warsaw"));
+    original.forwardSeconds(30);
+
+    TestClock deserialized = serializeAndDeserialize(original);
+
+    assertThat(deserialized.getCurrentTime()).isEqualTo(original.getCurrentTime());
+    assertThat(deserialized.getZone()).isEqualTo(original.getZone());
+  }
+
+  @Test
+  void givenTickingClock_whenSerializedAndDeserialized_thenTickDurationIsPreserved()
+      throws Exception {
+    TestClock original = TestClock.from(BASE).withTickDuration(Duration.ofSeconds(5));
+
+    TestClock deserialized = serializeAndDeserialize(original);
+
+    Instant first = deserialized.instant();
+    Instant second = deserialized.instant();
+    assertThat(second).isEqualTo(first.plusSeconds(5));
+  }
+
+  private static TestClock serializeAndDeserialize(TestClock clock) throws Exception {
+    ByteArrayOutputStream buf = new ByteArrayOutputStream();
+    try (ObjectOutputStream out = new ObjectOutputStream(buf)) {
+      out.writeObject(clock);
+    }
+    try (ObjectInputStream in =
+        new ObjectInputStream(new ByteArrayInputStream(buf.toByteArray()))) {
+      return (TestClock) in.readObject();
+    }
   }
 }
