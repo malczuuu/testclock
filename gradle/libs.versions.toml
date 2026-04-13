@@ -1,0 +1,32 @@
+[versions]
+errorprone = "2.49.0"
+errorprone-plugin = "5.1.0"
+idea-ext = "1.4.1"
+jspecify = "1.0.0"
+junit = "6.0.3"
+nmcp = "1.4.4"
+nullaway = "0.13.2"
+spock = "2.4-groovy-5.0"
+spotless = "8.4.0"
+
+[plugins]
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-plugin" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version.ref = "idea-ext" }
+nmcp = { id = "com.gradleup.nmcp", version.ref = "nmcp" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+
+[libraries]
+# BOMs
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+spock-bom = { module = "org.spockframework:spock-bom", version.ref = "spock" }
+
+# direct versions
+errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
+nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
+
+# versions managed by junit-bom
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+# versions managed by spock-bom
+spock-core = { module = "org.spockframework:spock-core" }
