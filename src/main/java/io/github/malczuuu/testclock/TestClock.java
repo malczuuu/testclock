@@ -459,7 +459,7 @@ public class TestClock extends Clock {
    * or {@code TestClock[<instant>,<zone>,tick=<duration>]} when a non-zero tick duration is
    * configured.
    *
-   * <p>Its primary purpose is debugging convenience in IDE.
+   * <p>Its primary purpose is debugging convenience in an IDE.
    *
    * <pre>{@code
    * TestClock.from("2024-01-01T00:00:00Z").toString();
