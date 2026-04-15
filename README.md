@@ -1,5 +1,10 @@
 # TestClock
 
+[![Build Status](https://github.com/malczuuu/testclock/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/malczuuu/testclock/actions/workflows/gradle-build.yml)
+[![Sonatype](https://img.shields.io/maven-central/v/io.github.malczuuu/testclock)][maven-central]
+[![JavaDoc](https://javadoc.io/badge2/io.github.malczuuu/testclock/javadoc.svg)](https://javadoc.io/doc/io.github.malczuuu/testclock)
+[![License](https://img.shields.io/github/license/malczuuu/testclock)](https://github.com/malczuuu/testclock/blob/main/LICENSE)
+
 A mutable & playable `java.time.Clock` for unit tests.
 
 ## Table of Contents
@@ -195,3 +200,5 @@ repositories {
 ```
 
 </details>
+
+[maven-central]: https://central.sonatype.com/artifact/io.github.malczuuu/testclock
