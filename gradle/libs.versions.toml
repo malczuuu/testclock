@@ -5,7 +5,7 @@ idea-ext = "1.4.1"
 jspecify = "1.0.0"
 junit = "6.0.3"
 nmcp = "1.4.4"
-nullaway = "0.13.3"
+nullaway = "0.13.4"
 spock = "2.4-groovy-5.0"
 spotless = "8.4.0"
 
