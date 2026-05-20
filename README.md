@@ -1,6 +1,7 @@
 # TestClock
 
 [![Build Status](https://github.com/malczuuu/testclock/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/malczuuu/testclock/actions/workflows/gradle-build.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/malczuuu/testclock)](https://app.codecov.io/github/malczuuu/testclock)
 [![Sonatype](https://img.shields.io/maven-central/v/io.github.malczuuu/testclock)][maven-central]
 [![JavaDoc](https://javadoc.io/badge2/io.github.malczuuu/testclock/javadoc.svg)](https://javadoc.io/doc/io.github.malczuuu/testclock)
 [![License](https://img.shields.io/github/license/malczuuu/testclock)](https://github.com/malczuuu/testclock/blob/main/LICENSE)
