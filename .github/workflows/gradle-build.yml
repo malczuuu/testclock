@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload JaCoCo report to Codecov
         if: matrix.java == 25
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           files: build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.CODECOV_TOKEN }}
