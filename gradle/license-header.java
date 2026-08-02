@@ -14,12 +14,3 @@
  * limitations under the License.
  */
 
-import org.jspecify.annotations.NullMarked;
-
-/** Provides {@code TestClock}, a mutable {@code java.time.Clock} for use in unit tests. */
-@NullMarked
-module io.github.malczuuu.testclock {
-  requires static org.jspecify;
-
-  exports io.github.malczuuu.testclock;
-}

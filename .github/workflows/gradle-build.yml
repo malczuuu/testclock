@@ -9,7 +9,7 @@ on:
       - "release-*"
     paths:
       - ".github/workflows/gradle-build.yml"
-      - "buildSrc/**"
+      - "build-logic/**"
       - "gradle/**"
       - "**/src/**"
       - "**/*.gradle.kts"

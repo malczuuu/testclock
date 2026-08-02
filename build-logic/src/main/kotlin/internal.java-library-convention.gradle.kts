@@ -2,9 +2,8 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id("internal.common-convention")
-    id("java")
-    id("groovy")
+    id("java-library")
+    id("io.github.malczuuu.nullmarked")
 }
 
 // The project is built using a JDK 25 toolchain, but the main sources are compiled with --release 8.
@@ -21,6 +20,8 @@ plugins {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(25)
+    withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -58,5 +59,12 @@ tasks.withType<Jar>().configureEach {
     from("${rootProject.rootDir}/LICENSE") {
         into("META-INF/")
         rename { "LICENSE.txt" }
+    }
+}
+
+nullmarked {
+    verifyOnly = true
+    verify {
+        strict()
     }
 }
