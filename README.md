@@ -1,8 +1,8 @@
 <h1 align="center">TestClock</h1>
 
 <p align="center">
-  <a href="https://github.com/malczuuu/testclock/actions/workflows/gradle-build.yml"><img src="https://github.com/malczuuu/testclock/actions/workflows/gradle-build.yml/badge.svg" alt="Build Status"></a>
-  <a href="https://codecov.io/github/malczuuu/testclock"><img src="https://codecov.io/github/malczuuu/testclock/branch/main/graph/badge.svg?token=U8GKHEDH32" alt="codecov"></a>
+  <a href="https://github.com/malczuuu/testclock/actions/workflows/ci.yml"><img src="https://github.com/malczuuu/testclock/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://codecov.io/github/malczuuu/testclock"><img src="https://codecov.io/github/malczuuu/testclock/branch/main/graph/badge.svg?token=U8GKHEDH32" alt="Codecov"></a>
   <a href="https://central.sonatype.com/artifact/io.github.malczuuu/testclock"><img src="https://img.shields.io/maven-central/v/io.github.malczuuu/testclock" alt="Sonatype"></a>
   <a href="https://javadoc.io/doc/io.github.malczuuu/testclock"><img src="https://javadoc.io/badge2/io.github.malczuuu/testclock/javadoc.svg" alt="JavaDoc"></a>
   <a href="https://github.com/malczuuu/testclock/blob/main/LICENSE"><img src="https://img.shields.io/github/license/malczuuu/testclock" alt="License"></a>

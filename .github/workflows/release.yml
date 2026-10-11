@@ -1,4 +1,4 @@
-name: Gradle Publish [release]
+name: Release
 
 on:
   push:
@@ -35,9 +35,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-publish-release-${{ runner.os }}-java-17-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: release-${{ runner.os }}-java-17-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            gradle-publish-release-${{ runner.os }}-java-17-
+            release-${{ runner.os }}-java-17-
 
       - name: Publish Release
         env:
