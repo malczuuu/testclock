@@ -7,7 +7,7 @@ jspecify = "1.0.1"
 junit = "6.1.3"
 nmcp = "1.6.2"
 nullaway = "0.14.2"
-nullmarked = "0.7.1"
+nullmarked = "1.0.0"
 spotless = "8.10.3"
 
 [plugins]
