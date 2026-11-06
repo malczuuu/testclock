@@ -49,7 +49,6 @@ This is a single-class library. The entire public API lives in `TestClock.java`.
 | `src/main/java`    | Production source               |
 | `src/test/java`    | Tests (JUnit Jupiter + AssertJ) |
 | `build.gradle.kts` | Build config & Spotless setup   |
-| `build-logic`      | Custom Gradle plugins/scripts   |
 
 ## Agent Rules
 

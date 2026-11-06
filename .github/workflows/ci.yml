@@ -9,7 +9,6 @@ on:
       - "release-*"
     paths:
       - ".github/workflows/ci.yml"
-      - "build-logic/**"
       - "gradle/**"
       - "**/src/**"
       - "**/*.gradle.kts"
