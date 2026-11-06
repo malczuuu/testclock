@@ -21,6 +21,7 @@ A mutable & playable `java.time.Clock` for unit tests.
   - [Setting time directly](#setting-time-directly)
   - [Auto-ticking](#auto-ticking)
   - [Inspecting the current time without side effects](#inspecting-the-current-time-without-side-effects)
+  - [Time zones and DST](#time-zones-and-dst)
 
 ## Why to use `TestClock`
 
@@ -101,6 +102,15 @@ clock.forwardNanos(1_000_000L);
 
 All `forward` methods return the resulting `Instant`.
 
+Date-based amounts are supported too. They are applied in the clock's zone, following calendar rules (e.g. January 31
+plus one month is the last day of February).
+
+```java
+clock.forward(Period.ofMonths(1));
+clock.forward(Period.of(1, 2, 3));
+clock.forward(2, ChronoUnit.WEEKS);
+```
+
 **Note** that these methods do not validate if the input is positive. You can just as much call `forwardSeconds(-10)`
 to move time backward by 10 seconds. It is up to developer to choose what's more convenient for the test scenario.
 
@@ -111,6 +121,8 @@ clock.rewind(Duration.ofHours(1));
 clock.rewindSeconds(10);
 clock.rewindMillis(250);
 clock.rewindNanos(500_000L);
+clock.rewind(Period.ofYears(1));
+clock.rewind(3, ChronoUnit.MONTHS);
 ```
 
 All `rewind` methods return the resulting `Instant`.
@@ -148,6 +160,58 @@ time without advancing it.
 ```java
 Instant now = clock.getCurrentTime();
 ```
+
+### Time zones and DST
+
+`Period` and units of days or longer follow the calendar of the clock's zone. `Duration` and units of hours or shorter
+move by an exact amount of time.
+
+<details>
+<summary><b>Expand...</b></summary>
+
+Clocks created without a zone use UTC, which has no DST, so one day is always exactly 24 hours. In a zone with DST, the
+two kinds of amounts give different results across a transition:
+
+```java
+TestClock calendar = TestClock.from(Instant.parse("2024-03-30T11:00:00Z"), ZoneId.of("Europe/Warsaw"));
+TestClock exact = TestClock.from(Instant.parse("2024-03-30T11:00:00Z"), ZoneId.of("Europe/Warsaw"));
+
+calendar.forward(Period.ofDays(1));
+exact.forward(Duration.ofDays(1));
+
+LocalDateTime.now(calendar); // 2024-03-31T12:00 - same local time, 23 hours later
+LocalDateTime.now(exact);    // 2024-03-31T13:00 - exactly 24 hours later
+```
+
+The same applies to `ChronoUnit.DAYS` and `ChronoUnit.HOURS`. Methods `forwardSeconds`, `forwardMillis`, `forwardNanos`,
+their `rewind` counterparts and auto-ticking always move by an exact amount of time.
+
+---
+
+A **calendar amount can land on a local time affected by a DST transition**. The result follows `java.time` rules:
+
+- a local time skipped by the transition moves later by the length of the gap (02:30 becomes 03:30 in Warsaw on
+  2024-03-31),
+- a local time that occurs twice keeps the current offset, if it is valid (02:30+02:00 stays in summer time, 02:30+01:00
+  stays in winter time on 2024-10-27).
+
+For this reason, moving forward and then back by the same `Period` does not always return to the starting point.
+
+---
+
+To **ignore DST in a given zone**, pass a raw offset instead of a region. An offset never changes, so one day is always
+exactly 24 hours.
+
+```java
+TestClock clock = TestClock.from(Instant.parse("2024-07-15T10:00:00Z"), ZoneOffset.ofHours(1));
+
+OffsetDateTime.now(clock); // 2024-07-15T11:00+01:00
+```
+
+`ZoneId.of("+01:00")` gives the same result. **Note** that an offset is not the same as a region. In the example above,
+`Europe/Warsaw` would read `2024-07-15T12:00+02:00`.
+
+</details>
 
 ## Building from source
 

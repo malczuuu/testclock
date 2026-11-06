@@ -20,11 +20,15 @@ import java.io.Serializable;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A mutable &amp; playable {@link Clock} implementation designed for use in tests. It allows full
@@ -49,7 +53,7 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @since 1.0.0
  */
-public class TestClock extends Clock implements Serializable {
+public final class TestClock extends Clock implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -232,38 +236,60 @@ public class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Advances the current time by the given duration and returns the new instant.
+   * Advances the current time by the given amount and returns the new instant.
+   *
+   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
+   * ZonedDateTime#plus(TemporalAmount)}), so both time-based amounts (e.g. {@link Duration}) and
+   * date-based amounts (e.g. {@link Period} of days, weeks, months or years) are supported.
+   * Date-based amounts follow calendar rules of the zone - adding a month to January 31 yields the
+   * last day of February, and adding a day across a DST transition preserves the local time of day.
    *
    * <pre>{@code
-   * TestClock clock = TestClock.from("2024-01-01T00:00:00Z");
+   * TestClock clock = TestClock.from("2024-01-31T00:00:00Z");
    * Instant updated = clock.forward(Duration.ofMinutes(5));
-   * // updated == 2024-01-01T00:05:00Z
+   * // updated == 2024-01-31T00:05:00Z
+   * updated = clock.forward(Period.ofMonths(1));
+   * // updated == 2024-02-29T00:05:00Z
    * }</pre>
    *
    * @param amountToAdd the amount of time to add; not null
    * @return the updated instant after advancing
+   * @throws java.time.DateTimeException if the amount cannot be added
+   * @throws java.time.temporal.UnsupportedTemporalTypeException if the amount contains an
+   *     unsupported unit
+   * @throws ArithmeticException if numeric overflow occurs
    * @since 1.0.0
    */
   public Instant forward(TemporalAmount amountToAdd) {
-    return currentTime.updateAndGet(it -> it.plus(amountToAdd));
+    return currentTime.updateAndGet(it -> it.atZone(zone).plus(amountToAdd).toInstant());
   }
 
   /**
    * Advances the current time by the given amount of the given unit and returns the new instant.
    *
+   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
+   * ZonedDateTime#plus(long, TemporalUnit)}), so both time-based units (e.g. {@link
+   * java.time.temporal.ChronoUnit#HOURS}) and date-based units (e.g. {@link
+   * java.time.temporal.ChronoUnit#MONTHS}) are supported.
+   *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-01T00:00:00Z");
    * Instant updated = clock.forward(3, ChronoUnit.HOURS);
    * // updated == 2024-01-01T03:00:00Z
+   * updated = clock.forward(2, ChronoUnit.MONTHS);
+   * // updated == 2024-03-01T03:00:00Z
    * }</pre>
    *
    * @param amountToAdd the amount of the unit to add
    * @param unit the unit of the amount; not null
    * @return the updated instant after advancing
+   * @throws java.time.DateTimeException if the amount cannot be added
+   * @throws java.time.temporal.UnsupportedTemporalTypeException if the unit is not supported
+   * @throws ArithmeticException if numeric overflow occurs
    * @since 1.0.0
    */
   public Instant forward(long amountToAdd, TemporalUnit unit) {
-    return currentTime.updateAndGet(it -> it.plus(amountToAdd, unit));
+    return currentTime.updateAndGet(it -> it.atZone(zone).plus(amountToAdd, unit).toInstant());
   }
 
   /**
@@ -318,38 +344,62 @@ public class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Moves the current time back by the given duration and returns the new instant.
+   * Moves the current time back by the given amount and returns the new instant.
+   *
+   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
+   * ZonedDateTime#minus(TemporalAmount)}), so both time-based amounts (e.g. {@link Duration}) and
+   * date-based amounts (e.g. {@link Period} of days, weeks, months or years) are supported.
+   * Date-based amounts follow calendar rules of the zone - subtracting a month from March 31 yields
+   * the last day of February, and subtracting a day across a DST transition preserves the local
+   * time of day.
    *
    * <pre>{@code
-   * TestClock clock = TestClock.from("2024-01-01T01:00:00Z");
+   * TestClock clock = TestClock.from("2024-03-31T01:00:00Z");
    * Instant updated = clock.rewind(Duration.ofMinutes(30));
-   * // updated == 2024-01-01T00:30:00Z
+   * // updated == 2024-03-31T00:30:00Z
+   * updated = clock.rewind(Period.ofMonths(1));
+   * // updated == 2024-02-29T00:30:00Z
    * }</pre>
    *
    * @param amountToSubtract the amount of time to subtract; not null
    * @return the updated instant after rewinding
+   * @throws java.time.DateTimeException if the amount cannot be subtracted
+   * @throws java.time.temporal.UnsupportedTemporalTypeException if the amount contains an
+   *     unsupported unit
+   * @throws ArithmeticException if numeric overflow occurs
    * @since 1.0.0
    */
   public Instant rewind(TemporalAmount amountToSubtract) {
-    return currentTime.updateAndGet(it -> it.minus(amountToSubtract));
+    return currentTime.updateAndGet(it -> it.atZone(zone).minus(amountToSubtract).toInstant());
   }
 
   /**
    * Moves the current time back by the given amount of the given unit and returns the new instant.
    *
+   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
+   * ZonedDateTime#minus(long, TemporalUnit)}), so both time-based units (e.g. {@link
+   * java.time.temporal.ChronoUnit#HOURS}) and date-based units (e.g. {@link
+   * java.time.temporal.ChronoUnit#MONTHS}) are supported.
+   *
    * <pre>{@code
-   * TestClock clock = TestClock.from("2024-01-01T06:00:00Z");
+   * TestClock clock = TestClock.from("2024-03-01T06:00:00Z");
    * Instant updated = clock.rewind(2, ChronoUnit.HOURS);
+   * // updated == 2024-03-01T04:00:00Z
+   * updated = clock.rewind(2, ChronoUnit.MONTHS);
    * // updated == 2024-01-01T04:00:00Z
    * }</pre>
    *
    * @param amountToSubtract the amount of the unit to subtract
    * @param unit the unit of the amount; not null
    * @return the updated instant after rewinding
+   * @throws java.time.DateTimeException if the amount cannot be subtracted
+   * @throws java.time.temporal.UnsupportedTemporalTypeException if the unit is not supported
+   * @throws ArithmeticException if numeric overflow occurs
    * @since 1.0.0
    */
   public Instant rewind(long amountToSubtract, TemporalUnit unit) {
-    return currentTime.updateAndGet(it -> it.minus(amountToSubtract, unit));
+    return currentTime.updateAndGet(
+        it -> it.atZone(zone).minus(amountToSubtract, unit).toInstant());
   }
 
   /**
@@ -404,7 +454,7 @@ public class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * {@inheritDoc}
+   * Gets the time-zone being used to create dates and times.
    *
    * @return the time-zone being used to interpret instants, not null
    * @since 1.0.0
@@ -415,7 +465,7 @@ public class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * {@inheritDoc}
+   * Returns a copy of this clock with a different time-zone.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-01T00:00:00Z");
@@ -455,6 +505,54 @@ public class TestClock extends Clock implements Serializable {
   @Override
   public Instant instant() {
     return currentTime.getAndUpdate(it -> it.plus(tickDuration));
+  }
+
+  /**
+   * Compares this clock to another object. Two clocks are equal if they have the same current time,
+   * zone and tick duration. Comparing does not advance either clock.
+   *
+   * <p>The result reflects the state at the moment of the call, so equal clocks stop being equal
+   * once the time of only one of them changes.
+   *
+   * <pre>{@code
+   * TestClock first = TestClock.from("2024-01-01T00:00:00Z");
+   * TestClock second = TestClock.from("2024-01-01T00:00:00Z");
+   * first.equals(second); // true
+   * first.forwardSeconds(1);
+   * first.equals(second); // false
+   * }</pre>
+   *
+   * @param obj the object to compare with, may be null
+   * @return {@code true} if the given object is a {@code TestClock} with the same state
+   * @since 1.1.0
+   */
+  @Override
+  public boolean equals(@Nullable Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof TestClock)) {
+      return false;
+    }
+    TestClock other = (TestClock) obj;
+    return currentTime.get().equals(other.currentTime.get())
+        && zone.equals(other.zone)
+        && tickDuration.equals(other.tickDuration);
+  }
+
+  /**
+   * Returns a hash code based on the current time, zone and tick duration. Calling this method does
+   * not advance the clock.
+   *
+   * <p>The hash code changes whenever the current time changes, so a {@code TestClock} should not
+   * be used as a key in a hash-based collection while its time is being changed.
+   *
+   * @return the hash code of the current state of this clock
+   * @since 1.1.0
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(currentTime.get(), zone, tickDuration);
   }
 
   /**
