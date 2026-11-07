@@ -254,7 +254,7 @@ spotless {
         target("**/src/**/*.java")
         licenseHeaderFile(licenseHeader)
 
-        googleJavaFormat().maxLineLength(120)
+        googleJavaFormat().maxLineLength(100)
         forbidWildcardImports()
         endWithNewline()
         lineEndings = LineEnding.UNIX
@@ -279,7 +279,7 @@ spotless {
         target("**/*.gradle.kts")
         targetExclude("**/build/**")
 
-        ktlint().editorConfigOverride(mapOf("max_line_length" to "120"))
+        ktlint().editorConfigOverride(mapOf("max_line_length" to "100"))
         endWithNewline()
         lineEndings = LineEnding.UNIX
     }

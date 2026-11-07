@@ -49,8 +49,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Documents what each date-time type reads from a {@link TestClock}.
  *
- * <p>In 2024, Warsaw skips 02:00-03:00 on March 31 (offset changes from +01:00 to +02:00) and repeats 02:00-03:00 on
- * October 27 (offset changes from +02:00 to +01:00).
+ * <p>In 2024, Warsaw skips 02:00-03:00 on March 31 (offset changes from +01:00 to +02:00) and
+ * repeats 02:00-03:00 on October 27 (offset changes from +02:00 to +01:00).
  */
 class TemporalTests {
 
@@ -374,7 +374,8 @@ class TemporalTests {
   }
 
   @Test
-  void givenLegacyDate_whenForwardOneHourOverDstStart_thenFormatsAfterMissingHour() throws ParseException {
+  void givenLegacyDate_whenForwardOneHourOverDstStart_thenFormatsAfterMissingHour()
+      throws ParseException {
     SimpleDateFormat format = warsawFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
     Date start = format.parse("2024-03-31T01:30:00+01:00");
     TestClock clock = TestClock.from(start.toInstant(), WARSAW);
@@ -385,7 +386,8 @@ class TemporalTests {
   }
 
   @Test
-  void givenLegacyDate_whenForwardOneHourOverDstEnd_thenFormatsSameTimeWithNewOffset() throws ParseException {
+  void givenLegacyDate_whenForwardOneHourOverDstEnd_thenFormatsSameTimeWithNewOffset()
+      throws ParseException {
     SimpleDateFormat format = warsawFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
     Date start = format.parse("2024-10-27T02:30:00+02:00");
     TestClock clock = TestClock.from(start.toInstant(), WARSAW);
@@ -396,7 +398,8 @@ class TemporalTests {
   }
 
   @Test
-  void givenLegacyDate_whenForwardPeriodOfOneDayOverDstStart_thenFormatsSameLocalTime() throws ParseException {
+  void givenLegacyDate_whenForwardPeriodOfOneDayOverDstStart_thenFormatsSameLocalTime()
+      throws ParseException {
     SimpleDateFormat format = warsawFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
     Date start = format.parse("2024-03-30T12:00:00+01:00");
     TestClock clock = TestClock.from(start.toInstant(), WARSAW);
@@ -407,7 +410,8 @@ class TemporalTests {
   }
 
   @Test
-  void givenWallClockTimeInDstGap_whenParsedByLegacyDateAndJavaTime_thenBothPickSameInstant() throws ParseException {
+  void givenWallClockTimeInDstGap_whenParsedByLegacyDateAndJavaTime_thenBothPickSameInstant()
+      throws ParseException {
     Date legacy = warsawFormat("yyyy-MM-dd'T'HH:mm:ss").parse("2024-03-31T02:30:00");
     ZonedDateTime modern = LocalDateTime.parse("2024-03-31T02:30:00").atZone(WARSAW);
 
@@ -416,7 +420,8 @@ class TemporalTests {
   }
 
   @Test
-  void givenWallClockTimeInDstOverlap_whenParsedByLegacyDateAndJavaTime_thenInstantsDiffer() throws ParseException {
+  void givenWallClockTimeInDstOverlap_whenParsedByLegacyDateAndJavaTime_thenInstantsDiffer()
+      throws ParseException {
     Date legacy = warsawFormat("yyyy-MM-dd'T'HH:mm:ss").parse("2024-10-27T02:30:00");
     ZonedDateTime modern = LocalDateTime.parse("2024-10-27T02:30:00").atZone(WARSAW);
 

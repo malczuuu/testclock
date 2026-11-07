@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-/** Provides {@code TestClock}, a mutable &amp; playable {@code java.time.Clock} for use in unit tests. */
+/**
+ * Provides {@code TestClock}, a mutable &amp; playable {@code java.time.Clock} for use in unit
+ * tests.
+ */
 @NullMarked
 package io.github.malczuuu.testclock;
 
