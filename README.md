@@ -62,7 +62,7 @@ Requires Java 8 or later.
 <dependency>
     <groupId>io.github.malczuuu</groupId>
     <artifactId>testclock</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -70,7 +70,7 @@ Requires Java 8 or later.
 **Gradle**
 
 ```kotlin
-testImplementation("io.github.malczuuu:testclock:1.0.0")
+testImplementation("io.github.malczuuu:testclock:1.1.0")
 ```
 
 ## Usage
