@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog][keepachangelog], and this project adhe
 
 ## [Unreleased]
 
+### Added
+
+- Add `setCurrentTime(LocalDateTime)`, which interprets the given local date-time in the zone of the clock.
+
 ### Changed
 
 - Make `TestClock` implement `Serializable`.

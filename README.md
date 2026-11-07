@@ -134,6 +134,9 @@ move time forward by 5 seconds. It is up to developer to choose what's more conv
 
 ```java
 clock.setCurrentTime(Instant.parse("2025-12-31T23:59:59Z"));
+
+// Interpreted in the zone of the clock
+clock.setCurrentTime(LocalDateTime.parse("2025-12-31T23:59:59"));
 ```
 
 ### Auto-ticking

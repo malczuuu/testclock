@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -233,6 +234,28 @@ public final class TestClock extends Clock implements Serializable {
    */
   public void setCurrentTime(Instant currentTime) {
     this.currentTime.set(currentTime);
+  }
+
+  /**
+   * Sets the current time of this clock to the given local date-time, interpreted in the zone of
+   * this clock. This replaces the current value unconditionally.
+   *
+   * <p>A local date-time affected by a DST transition is resolved as in {@link
+   * LocalDateTime#atZone(ZoneId)} - a time skipped by the transition moves later by the length of
+   * the gap, and a time that occurs twice uses the earlier offset.
+   *
+   * <pre>{@code
+   * TestClock clock = TestClock.from("2024-01-01T00:00:00Z", ZoneId.of("Europe/Warsaw"));
+   * clock.setCurrentTime(LocalDateTime.parse("2024-06-15T12:00:00"));
+   * // clock.getCurrentTime() == 2024-06-15T10:00:00Z
+   * // LocalDateTime.now(clock) == 2024-06-15T12:00
+   * }</pre>
+   *
+   * @param currentTime the new current local date-time; not null
+   * @since 1.1.0
+   */
+  public void setCurrentTime(LocalDateTime currentTime) {
+    this.currentTime.set(currentTime.atZone(zone).toInstant());
   }
 
   /**

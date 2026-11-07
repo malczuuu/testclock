@@ -27,6 +27,7 @@ import java.time.Clock;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.Period;
 import java.time.ZoneId;
@@ -138,6 +139,63 @@ class TestClockTests {
 
     assertThat(clock.instant()).isEqualTo(newTime);
     assertThat(clock.instant()).isEqualTo(newTime.plusSeconds(1));
+  }
+
+  @Test
+  void givenClockInZone_whenSetCurrentTimeToLocalDateTime_thenInterpretsItInClockZone() {
+    TestClock clock = TestClock.from(BASE, ZoneId.of("Europe/Warsaw"));
+
+    clock.setCurrentTime(LocalDateTime.parse("2024-07-01T12:00:00"));
+
+    assertThat(clock.getCurrentTime()).isEqualTo("2024-07-01T10:00:00Z");
+    assertThat(LocalDateTime.now(clock)).isEqualTo("2024-07-01T12:00");
+  }
+
+  @Test
+  void givenUtcClock_whenSetCurrentTimeToLocalDateTime_thenUsesSameTimeInUtc() {
+    TestClock clock = TestClock.from(BASE);
+
+    clock.setCurrentTime(LocalDateTime.parse("2024-07-01T12:00:00"));
+
+    assertThat(clock.getCurrentTime()).isEqualTo("2024-07-01T12:00:00Z");
+  }
+
+  @Test
+  void givenFixedOffsetClock_whenSetCurrentTimeToLocalDateTime_thenUsesOffset() {
+    TestClock clock = TestClock.from(BASE, ZoneOffset.ofHours(1));
+
+    clock.setCurrentTime(LocalDateTime.parse("2024-07-01T12:00:00"));
+
+    assertThat(clock.getCurrentTime()).isEqualTo("2024-07-01T11:00:00Z");
+  }
+
+  @Test
+  void givenLocalDateTimeInDstGap_whenSetCurrentTime_thenShiftsLaterByGapLength() {
+    TestClock clock = TestClock.from(BASE, ZoneId.of("Europe/Warsaw"));
+
+    clock.setCurrentTime(LocalDateTime.parse("2024-03-31T02:30:00"));
+
+    assertThat(clock.getCurrentTime()).isEqualTo("2024-03-31T01:30:00Z");
+    assertThat(LocalDateTime.now(clock)).isEqualTo("2024-03-31T03:30");
+  }
+
+  @Test
+  void givenLocalDateTimeInDstOverlap_whenSetCurrentTime_thenUsesEarlierOffset() {
+    TestClock clock = TestClock.from("2024-10-27T01:30:00Z", ZoneId.of("Europe/Warsaw"));
+
+    clock.setCurrentTime(LocalDateTime.parse("2024-10-27T02:30:00"));
+
+    assertThat(clock.getCurrentTime()).isEqualTo("2024-10-27T00:30:00Z");
+  }
+
+  @Test
+  void givenTickingClock_whenSetCurrentTimeToLocalDateTime_thenAffectsNextInstant() {
+    TestClock clock = TestClock.from(BASE).withTickDuration(Duration.ofSeconds(1));
+
+    clock.setCurrentTime(LocalDateTime.parse("2024-07-01T12:00:00"));
+
+    assertThat(clock.instant()).isEqualTo("2024-07-01T12:00:00Z");
+    assertThat(clock.instant()).isEqualTo("2024-07-01T12:00:01Z");
   }
 
   @Test
