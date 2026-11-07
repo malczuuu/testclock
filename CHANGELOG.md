@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][keepachangelog], and this project adhe
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-07
+
 ### Added
 
 - Add `setCurrentTime(LocalDateTime)`, which interprets the given local date-time in the zone of the clock.
