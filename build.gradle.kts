@@ -184,38 +184,29 @@ publishing {
             pom {
                 name = "TestClock"
                 description = "A mutable & playable java.time.Clock for unit tests."
-                url = property("internal.pom.url") as String
-                inceptionYear = property("internal.pom.inception-year") as String
+                url = "https://github.com/malczuuu/testclock"
+                inceptionYear = "2026"
                 licenses {
-                    project.findLicenses().forEach {
-                        license {
-                            name = it.name
-                            url = it.url
-                            distribution = it.distribution
-                            comments = it.comments
-                        }
+                    license {
+                        name = "Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0"
                     }
                 }
                 developers {
-                    project.findDevelopers().forEach {
-                        developer {
-                            id = it.id
-                            name = it.name
-                            url = it.url
-                            email = it.email
-                            organization = it.organization
-                            organizationUrl = it.organizationUrl
-                        }
+                    developer {
+                        id = "damianmalczewski"
+                        name = "Damian Malczewski"
+                        url = "https://github.com/damianmalczewski"
                     }
                 }
                 scm {
-                    connection = property("internal.pom.scm.connection") as String
-                    developerConnection = property("internal.pom.scm.developer-connection") as String
-                    url = property("internal.pom.scm.url") as String
+                    connection = "scm:git:https://github.com/malczuuu/testclock.git"
+                    developerConnection = "scm:git:git@github.com:malczuuu/testclock.git"
+                    url = "https://github.com/malczuuu/testclock"
                 }
                 issueManagement {
-                    system = property("internal.pom.issue-management.system") as String
-                    url = property("internal.pom.issue-management.url") as String
+                    system = "GitHub Issues"
+                    url = "https://github.com/malczuuu/testclock/issues"
                 }
             }
         }
@@ -311,111 +302,6 @@ spotless {
 }
 
 defaultTasks("spotlessApply", "build")
-
-/**
- * Represents a single developer entry used in publishing metadata (e.g. POM developers section).
- *
- * All fields except [id] are optional to allow partial definitions in `gradle.properties`. Missing
- * optional values are simply omitted from the generated publication metadata.
- *
- * @property id Unique developer identifier (required).
- * @property name Human-readable developer name.
- * @property email Contact email address.
- * @property url Developer personal or profile URL.
- * @property organization Organization the developer belongs to.
- * @property organizationUrl URL of the organization.
- */
-data class Developer(
-    val id: String,
-    val name: String?,
-    val email: String?,
-    val url: String?,
-    val organization: String?,
-    val organizationUrl: String?,
-)
-
-/**
- * Represents a single license entry used in publishing metadata (e.g. POM licenses section).
- *
- * All fields except [name] are optional to allow partial definitions in `gradle.properties`.
- * Missing optional values are simply omitted from the generated publication metadata.
- *
- * @property name Human-readable license name.
- * @property url URL to the full license details.
- */
-data class License(val name: String?, val url: String?, val distribution: String?, val comments: String?)
-
-/**
- * Evaluates a structured list of developers defined in `gradle.properties`.
- *
- * Developers are resolved using zero-based indexing and the following property naming convention:
- * ```properties
- * internal.pom.developers.0.id=john.doe
- * internal.pom.developers.0.name=JohnDoe
- * internal.pom.developers.0.url=https://johndoe.me
- *
- * internal.pom.developers.1.id=otherdev
- * internal.pom.developers.1.name=Other Developer
- * ```
- *
- * Evaluation stops at the first missing mandatory `id` property. This allows the list to be
- * extended by simply adding the next index.
- *
- * @return An ordered list of resolved [Developer] definitions.
- * @receiver Gradle [Project] from which properties are read.
- */
-fun Project.findDevelopers(): List<Developer> {
-    val developers = mutableListOf<Developer>()
-    var index = 0
-    while (true) {
-        developers.add(
-            Developer(
-                id = findProperty("internal.pom.developers.$index.id") as? String ?: break,
-                name = findProperty("internal.pom.developers.$index.name") as? String,
-                email = findProperty("internal.pom.developers.$index.email") as? String,
-                url = findProperty("internal.pom.developers.$index.url") as? String,
-                organization = findProperty("internal.pom.developers.$index.organization") as? String,
-                organizationUrl = findProperty("internal.pom.developers.$index.organization-url") as? String,
-            ),
-        )
-        index++
-    }
-    return developers
-}
-
-/**
- * Evaluates a structured list of licenses defined in `gradle.properties`.
- *
- * Licenses are resolved using zero-based indexing and the following property naming convention:
- * ```properties
- * internal.pom.licenses.0.name=MIT License
- * internal.pom.licenses.0.url=https://opensource.org/license/MIT
- *
- * internal.pom.licenses.1.name=Apache-2.0 License
- * ```
- *
- * Evaluation stops at the first missing mandatory `name` property. This allows the list to be
- * extended by simply adding the next index.
- *
- * @return An ordered list of resolved [License] definitions.
- * @receiver Gradle [Project] from which properties are read.
- */
-fun Project.findLicenses(): List<License> {
-    val licenses = mutableListOf<License>()
-    var index = 0
-    while (true) {
-        licenses.add(
-            License(
-                name = findProperty("internal.pom.licenses.$index.name") as? String ?: break,
-                url = findProperty("internal.pom.licenses.$index.url") as? String,
-                distribution = findProperty("internal.pom.licenses.$index.distribution") as? String,
-                comments = findProperty("internal.pom.licenses.$index.comments") as? String,
-            ),
-        )
-        index++
-    }
-    return licenses
-}
 
 /**
  * Retrieves a boolean property from the project, interpreting any value other than `"false"` as
