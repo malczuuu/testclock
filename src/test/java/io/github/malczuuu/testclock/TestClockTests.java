@@ -84,8 +84,7 @@ class TestClockTests {
 
   @Test
   void givenInvalidText_whenFrom_thenThrowsDateTimeParseException() {
-    assertThatThrownBy(() -> TestClock.from("not-an-instant"))
-        .isInstanceOf(DateTimeParseException.class);
+    assertThatThrownBy(() -> TestClock.from("not-an-instant")).isInstanceOf(DateTimeParseException.class);
   }
 
   @Test
@@ -428,8 +427,7 @@ class TestClockTests {
   void givenClock_whenForwardUnsupportedUnit_thenThrowsAndLeavesClockUnchanged() {
     TestClock clock = TestClock.from(BASE);
 
-    assertThatThrownBy(() -> clock.forward(1, ChronoUnit.FOREVER))
-        .isInstanceOf(UnsupportedTemporalTypeException.class);
+    assertThatThrownBy(() -> clock.forward(1, ChronoUnit.FOREVER)).isInstanceOf(UnsupportedTemporalTypeException.class);
     assertThat(clock.getCurrentTime()).isEqualTo(BASE);
   }
 
@@ -530,8 +528,7 @@ class TestClockTests {
   void givenClock_whenRewindUnsupportedUnit_thenThrowsAndLeavesClockUnchanged() {
     TestClock clock = TestClock.from(BASE);
 
-    assertThatThrownBy(() -> clock.rewind(1, ChronoUnit.FOREVER))
-        .isInstanceOf(UnsupportedTemporalTypeException.class);
+    assertThatThrownBy(() -> clock.rewind(1, ChronoUnit.FOREVER)).isInstanceOf(UnsupportedTemporalTypeException.class);
     assertThat(clock.getCurrentTime()).isEqualTo(BASE);
   }
 
@@ -619,8 +616,7 @@ class TestClockTests {
 
   @Test
   void givenLocalTimeInHalfHourDstGap_whenForwardPeriodOfDays_thenShiftsLaterByHalfHour() {
-    TestClock clock =
-        TestClock.from(at("2024-10-05T02:15:00+10:30"), ZoneId.of("Australia/Lord_Howe"));
+    TestClock clock = TestClock.from(at("2024-10-05T02:15:00+10:30"), ZoneId.of("Australia/Lord_Howe"));
 
     Instant result = clock.forward(Period.ofDays(1));
 
@@ -759,9 +755,7 @@ class TestClockTests {
 
   @Test
   void givenTickingClockBeforeDstGap_whenInstantCalledRepeatedly_thenTicksExactDuration() {
-    TestClock clock =
-        TestClock.from(at("2024-03-31T01:30:00+01:00"), WARSAW)
-            .withTickDuration(Duration.ofHours(1));
+    TestClock clock = TestClock.from(at("2024-03-31T01:30:00+01:00"), WARSAW).withTickDuration(Duration.ofHours(1));
 
     assertThat(clock.instant()).isEqualTo(at("2024-03-31T01:30:00+01:00"));
     assertThat(clock.instant()).isEqualTo(at("2024-03-31T03:30:00+02:00"));
@@ -904,8 +898,7 @@ class TestClockTests {
     TestClock clock = TestClock.from(BASE);
     clock.forwardSeconds(60);
 
-    assertThat(clock.withZone(ZoneId.of("America/Chicago")).instant())
-        .isEqualTo(BASE.plusSeconds(60));
+    assertThat(clock.withZone(ZoneId.of("America/Chicago")).instant()).isEqualTo(BASE.plusSeconds(60));
   }
 
   @Test
@@ -1049,8 +1042,7 @@ class TestClockTests {
   }
 
   @Test
-  void givenTickingClock_whenSerializedAndDeserialized_thenTickDurationIsPreserved()
-      throws Exception {
+  void givenTickingClock_whenSerializedAndDeserialized_thenTickDurationIsPreserved() throws Exception {
     TestClock original = TestClock.from(BASE).withTickDuration(Duration.ofSeconds(5));
 
     TestClock deserialized = serializeAndDeserialize(original);
@@ -1069,8 +1061,7 @@ class TestClockTests {
     try (ObjectOutputStream out = new ObjectOutputStream(buf)) {
       out.writeObject(clock);
     }
-    try (ObjectInputStream in =
-        new ObjectInputStream(new ByteArrayInputStream(buf.toByteArray()))) {
+    try (ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(buf.toByteArray()))) {
       return (TestClock) in.readObject();
     }
   }

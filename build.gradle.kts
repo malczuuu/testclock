@@ -254,7 +254,7 @@ spotless {
         target("**/src/**/*.java")
         licenseHeaderFile(licenseHeader)
 
-        googleJavaFormat()
+        googleJavaFormat().maxLineLength(120)
         forbidWildcardImports()
         endWithNewline()
         lineEndings = LineEnding.UNIX

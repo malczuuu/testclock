@@ -32,17 +32,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A mutable &amp; playable {@link Clock} implementation designed for use in tests. It allows full
- * control over the current time, including setting an arbitrary instant, advancing or rewinding
- * time, and configuring an automatic tick duration applied on each call to {@link #instant()}.
+ * A mutable &amp; playable {@link Clock} implementation designed for use in tests. It allows full control over the
+ * current time, including setting an arbitrary instant, advancing or rewinding time, and configuring an automatic tick
+ * duration applied on each call to {@link #instant()}.
  *
- * <p>By default, the clock is non-ticking - {@link #instant()} returns the same value until the
- * time is explicitly changed. An automatic tick can be enabled via {@link
- * #withTickDuration(Duration)}, which causes each call to {@link #instant()} to advance the clock
- * by the configured amount.
+ * <p>By default, the clock is non-ticking - {@link #instant()} returns the same value until the time is explicitly
+ * changed. An automatic tick can be enabled via {@link #withTickDuration(Duration)}, which causes each call to {@link
+ * #instant()} to advance the clock by the configured amount.
  *
- * <p>All time-mutation methods ({@link #setCurrentTime}, {@link #forward}, {@link #rewind}, etc.)
- * are thread-safe.
+ * <p>All time-mutation methods ({@link #setCurrentTime}, {@link #forward}, {@link #rewind}, etc.) are thread-safe.
  *
  * <p>Example usage:
  *
@@ -80,8 +78,8 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Creates a {@code TestClock} initialized from an existing {@link Clock}. The starting instant
-   * and zone are taken from the source clock.
+   * Creates a {@code TestClock} initialized from an existing {@link Clock}. The starting instant and zone are taken
+   * from the source clock.
    *
    * @param clock the clock to snapshot; not null
    * @return a new {@code TestClock} with the instant and zone of the given clock
@@ -103,11 +101,10 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Creates a non-ticking {@code TestClock} fixed at the parsed instant in {@link ZoneOffset#UTC}.
-   * The text is parsed using {@link Instant#parse(CharSequence)}.
+   * Creates a non-ticking {@code TestClock} fixed at the parsed instant in {@link ZoneOffset#UTC}. The text is parsed
+   * using {@link Instant#parse(CharSequence)}.
    *
-   * @param instantAsText the instant string to parse (e.g. {@code "2024-01-01T00:00:00Z"}); not
-   *     null
+   * @param instantAsText the instant string to parse (e.g. {@code "2024-01-01T00:00:00Z"}); not null
    * @return a new {@code TestClock} set to the parsed instant in UTC
    * @throws java.time.format.DateTimeParseException if the text cannot be parsed
    * @since 1.0.0
@@ -117,11 +114,10 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Creates a non-ticking {@code TestClock} fixed at the parsed instant in the given time zone. The
-   * text is parsed using {@link Instant#parse(CharSequence)}.
+   * Creates a non-ticking {@code TestClock} fixed at the parsed instant in the given time zone. The text is parsed
+   * using {@link Instant#parse(CharSequence)}.
    *
-   * @param instantAsText the instant string to parse (e.g. {@code "2024-01-01T00:00:00Z"}); not
-   *     null
+   * @param instantAsText the instant string to parse (e.g. {@code "2024-01-01T00:00:00Z"}); not null
    * @param zone the time zone; not null
    * @return a new {@code TestClock} set to the parsed instant and zone
    * @throws java.time.format.DateTimeParseException if the text cannot be parsed
@@ -150,8 +146,7 @@ public final class TestClock extends Clock implements Serializable {
   private final ZoneId zone;
 
   /**
-   * The amount by which {@link #instant()} advances the clock on each call. {@link Duration#ZERO}
-   * means non-ticking.
+   * The amount by which {@link #instant()} advances the clock on each call. {@link Duration#ZERO} means non-ticking.
    */
   private final Duration tickDuration;
 
@@ -180,12 +175,10 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Returns a new, independent {@code TestClock} with the given tick duration. The new clock
-   * captures the current time of this clock at the moment of the call; subsequent mutations to
-   * either clock do not affect the other.
+   * Returns a new, independent {@code TestClock} with the given tick duration. The new clock captures the current time
+   * of this clock at the moment of the call; subsequent mutations to either clock do not affect the other.
    *
-   * <p>Each call to {@link #instant()} on the returned clock will advance its time by {@code
-   * tickDuration}.
+   * <p>Each call to {@link #instant()} on the returned clock will advance its time by {@code tickDuration}.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-01T00:00:00Z");
@@ -194,10 +187,9 @@ public final class TestClock extends Clock implements Serializable {
    * Instant second = ticking.instant(); // 2024-01-01T00:00:01Z
    * }</pre>
    *
-   * @param tickDuration the amount to advance on each {@link #instant()} call; use {@link
-   *     Duration#ZERO} for a non-ticking clock
-   * @return a new {@code TestClock} with the current time and zone of this clock but the new tick
-   *     duration
+   * @param tickDuration the amount to advance on each {@link #instant()} call; use {@link Duration#ZERO} for a
+   *     non-ticking clock
+   * @return a new {@code TestClock} with the current time and zone of this clock but the new tick duration
    * @since 1.0.0
    */
   public TestClock withTickDuration(Duration tickDuration) {
@@ -205,8 +197,8 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Returns the current instant without advancing the clock, regardless of any configured tick
-   * duration. This is useful for inspecting the current time in tests without side effects.
+   * Returns the current instant without advancing the clock, regardless of any configured tick duration. This is useful
+   * for inspecting the current time in tests without side effects.
    *
    * @return the current instant of this clock
    * @since 1.0.0
@@ -226,8 +218,7 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Sets the current time of this clock to the given instant. This replaces the current value
-   * unconditionally.
+   * Sets the current time of this clock to the given instant. This replaces the current value unconditionally.
    *
    * @param currentTime the new current instant; not null
    * @since 1.0.0
@@ -237,12 +228,12 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Sets the current time of this clock to the given local date-time, interpreted in the zone of
-   * this clock. This replaces the current value unconditionally.
+   * Sets the current time of this clock to the given local date-time, interpreted in the zone of this clock. This
+   * replaces the current value unconditionally.
    *
-   * <p>A local date-time affected by a DST transition is resolved as in {@link
-   * LocalDateTime#atZone(ZoneId)} - a time skipped by the transition moves later by the length of
-   * the gap, and a time that occurs twice uses the earlier offset.
+   * <p>A local date-time affected by a DST transition is resolved as in {@link LocalDateTime#atZone(ZoneId)} - a time
+   * skipped by the transition moves later by the length of the gap, and a time that occurs twice uses the earlier
+   * offset.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-01T00:00:00Z", ZoneId.of("Europe/Warsaw"));
@@ -262,10 +253,10 @@ public final class TestClock extends Clock implements Serializable {
    * Advances the current time by the given amount and returns the new instant.
    *
    * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
-   * ZonedDateTime#plus(TemporalAmount)}), so both time-based amounts (e.g. {@link Duration}) and
-   * date-based amounts (e.g. {@link Period} of days, weeks, months or years) are supported.
-   * Date-based amounts follow calendar rules of the zone - adding a month to January 31 yields the
-   * last day of February, and adding a day across a DST transition preserves the local time of day.
+   * ZonedDateTime#plus(TemporalAmount)}), so both time-based amounts (e.g. {@link Duration}) and date-based amounts
+   * (e.g. {@link Period} of days, weeks, months or years) are supported. Date-based amounts follow calendar rules of
+   * the zone - adding a month to January 31 yields the last day of February, and adding a day across a DST transition
+   * preserves the local time of day.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-31T00:00:00Z");
@@ -278,8 +269,7 @@ public final class TestClock extends Clock implements Serializable {
    * @param amountToAdd the amount of time to add; not null
    * @return the updated instant after advancing
    * @throws java.time.DateTimeException if the amount cannot be added
-   * @throws java.time.temporal.UnsupportedTemporalTypeException if the amount contains an
-   *     unsupported unit
+   * @throws java.time.temporal.UnsupportedTemporalTypeException if the amount contains an unsupported unit
    * @throws ArithmeticException if numeric overflow occurs
    * @since 1.0.0
    */
@@ -290,10 +280,9 @@ public final class TestClock extends Clock implements Serializable {
   /**
    * Advances the current time by the given amount of the given unit and returns the new instant.
    *
-   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
-   * ZonedDateTime#plus(long, TemporalUnit)}), so both time-based units (e.g. {@link
-   * java.time.temporal.ChronoUnit#HOURS}) and date-based units (e.g. {@link
-   * java.time.temporal.ChronoUnit#MONTHS}) are supported.
+   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link ZonedDateTime#plus(long,
+   * TemporalUnit)}), so both time-based units (e.g. {@link java.time.temporal.ChronoUnit#HOURS}) and date-based units
+   * (e.g. {@link java.time.temporal.ChronoUnit#MONTHS}) are supported.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-01T00:00:00Z");
@@ -370,11 +359,10 @@ public final class TestClock extends Clock implements Serializable {
    * Moves the current time back by the given amount and returns the new instant.
    *
    * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
-   * ZonedDateTime#minus(TemporalAmount)}), so both time-based amounts (e.g. {@link Duration}) and
-   * date-based amounts (e.g. {@link Period} of days, weeks, months or years) are supported.
-   * Date-based amounts follow calendar rules of the zone - subtracting a month from March 31 yields
-   * the last day of February, and subtracting a day across a DST transition preserves the local
-   * time of day.
+   * ZonedDateTime#minus(TemporalAmount)}), so both time-based amounts (e.g. {@link Duration}) and date-based amounts
+   * (e.g. {@link Period} of days, weeks, months or years) are supported. Date-based amounts follow calendar rules of
+   * the zone - subtracting a month from March 31 yields the last day of February, and subtracting a day across a DST
+   * transition preserves the local time of day.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-03-31T01:00:00Z");
@@ -387,8 +375,7 @@ public final class TestClock extends Clock implements Serializable {
    * @param amountToSubtract the amount of time to subtract; not null
    * @return the updated instant after rewinding
    * @throws java.time.DateTimeException if the amount cannot be subtracted
-   * @throws java.time.temporal.UnsupportedTemporalTypeException if the amount contains an
-   *     unsupported unit
+   * @throws java.time.temporal.UnsupportedTemporalTypeException if the amount contains an unsupported unit
    * @throws ArithmeticException if numeric overflow occurs
    * @since 1.0.0
    */
@@ -399,10 +386,9 @@ public final class TestClock extends Clock implements Serializable {
   /**
    * Moves the current time back by the given amount of the given unit and returns the new instant.
    *
-   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link
-   * ZonedDateTime#minus(long, TemporalUnit)}), so both time-based units (e.g. {@link
-   * java.time.temporal.ChronoUnit#HOURS}) and date-based units (e.g. {@link
-   * java.time.temporal.ChronoUnit#MONTHS}) are supported.
+   * <p>The amount is applied to the current time viewed in the zone of this clock (see {@link ZonedDateTime#minus(long,
+   * TemporalUnit)}), so both time-based units (e.g. {@link java.time.temporal.ChronoUnit#HOURS}) and date-based units
+   * (e.g. {@link java.time.temporal.ChronoUnit#MONTHS}) are supported.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-03-01T06:00:00Z");
@@ -421,8 +407,7 @@ public final class TestClock extends Clock implements Serializable {
    * @since 1.0.0
    */
   public Instant rewind(long amountToSubtract, TemporalUnit unit) {
-    return currentTime.updateAndGet(
-        it -> it.atZone(zone).minus(amountToSubtract, unit).toInstant());
+    return currentTime.updateAndGet(it -> it.atZone(zone).minus(amountToSubtract, unit).toInstant());
   }
 
   /**
@@ -497,9 +482,8 @@ public final class TestClock extends Clock implements Serializable {
    * }</pre>
    *
    * @param zone the time-zone to change to, not null
-   * @return a new, independent {@code TestClock} with the given zone. The new clock captures the
-   *     current time of this clock at the moment of the call; subsequent mutations to either clock
-   *     do not affect the other.
+   * @return a new, independent {@code TestClock} with the given zone. The new clock captures the current time of this
+   *     clock at the moment of the call; subsequent mutations to either clock do not affect the other.
    * @since 1.0.0
    */
   @Override
@@ -508,11 +492,11 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Returns the current instant and, if a tick duration is configured, advances the clock by that
-   * amount for the next call.
+   * Returns the current instant and, if a tick duration is configured, advances the clock by that amount for the next
+   * call.
    *
-   * <p>If the tick duration is {@link Duration#ZERO} (the default), successive calls return the
-   * same instant until the time is changed explicitly.
+   * <p>If the tick duration is {@link Duration#ZERO} (the default), successive calls return the same instant until the
+   * time is changed explicitly.
    *
    * <pre>{@code
    * TestClock clock = TestClock.from("2024-01-01T00:00:00Z");
@@ -531,11 +515,11 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Compares this clock to another object. Two clocks are equal if they have the same current time,
-   * zone and tick duration. Comparing does not advance either clock.
+   * Compares this clock to another object. Two clocks are equal if they have the same current time, zone and tick
+   * duration. Comparing does not advance either clock.
    *
-   * <p>The result reflects the state at the moment of the call, so equal clocks stop being equal
-   * once the time of only one of them changes.
+   * <p>The result reflects the state at the moment of the call, so equal clocks stop being equal once the time of only
+   * one of them changes.
    *
    * <pre>{@code
    * TestClock first = TestClock.from("2024-01-01T00:00:00Z");
@@ -564,11 +548,11 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Returns a hash code based on the current time, zone and tick duration. Calling this method does
-   * not advance the clock.
+   * Returns a hash code based on the current time, zone and tick duration. Calling this method does not advance the
+   * clock.
    *
-   * <p>The hash code changes whenever the current time changes, so a {@code TestClock} should not
-   * be used as a key in a hash-based collection while its time is being changed.
+   * <p>The hash code changes whenever the current time changes, so a {@code TestClock} should not be used as a key in a
+   * hash-based collection while its time is being changed.
    *
    * @return the hash code of the current state of this clock
    * @since 1.1.0
@@ -579,9 +563,8 @@ public final class TestClock extends Clock implements Serializable {
   }
 
   /**
-   * Returns a string representation of this clock, formatted {@code TestClock[<instant>,<zone>]},
-   * or {@code TestClock[<instant>,<zone>,tick=<duration>]} when a non-zero tick duration is
-   * configured.
+   * Returns a string representation of this clock, formatted {@code TestClock[<instant>,<zone>]}, or {@code
+   * TestClock[<instant>,<zone>,tick=<duration>]} when a non-zero tick duration is configured.
    *
    * <p>Its primary purpose is debugging convenience in an IDE.
    *
